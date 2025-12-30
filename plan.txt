@@ -1,0 +1,41 @@
+1. courses.ts (Le Catalogue)
+C'est le cœur de l'académie. Il doit gérer l'affichage public et la structure.
+
+getPublishedCourses() : Pour la page d'accueil (filtrage par catégorie).
+getCourseBySlug(slug) : Pour le SEO et l'affichage de la page de vente.
+getCourseWithChapters(courseId) : Pour charger le plan du cours (Skeletons/Streaming).
+getChapter(chapterId) : Pour récupérer les infos d'un chapitre spécifique.
+
+
+
+2. services/progress.ts (La Gamification & Suivi)
+C'est ici que se joue la rétention des élèves (le point 3 du feedback).
+
+getUserProgress(userId, courseId) : Calcule le % global d'avancement.
+markLessonAsCompleted(userId, lessonId) : Met à jour le statut (utilise upsert de Prisma).
+getNextLesson(userId, currentLessonId) : Algorithme pour rediriger vers la leçon suivante automatiquement.
+3. services/video.ts (L'Hébergement - Mux/Cloudflare)
+Comme suggéré dans le feedback, ne stocke pas les vidéos en base.
+
+getVideoStatus(muxDataId) : Vérifie si la vidéo est prête à être streamée.
+generateVideoUploadUrl() : Pour que les instructeurs uploadent leurs cours.
+4. services/purchase.ts (Le Business & Accès)
+Gère qui a le droit de voir quoi.
+
+checkCourseAccess(userId, courseId) : Vérifie si l'utilisateur a acheté le cours (indispensable pour le middleware ou les layouts).
+getUserEnrollments(userId) : Pour le dashboard étudiant ("Mes cours").
+5. services/analytics.ts (Pour les Instructeurs)
+Pour donner de la valeur aux profs.
+
+getInstructorStats(instructorId) : Revenu total, nombre d'élèves.
+getCoursePerformance(courseId) : Quel cours se vend le mieux ?
+6. services/certificate.ts (La Récompense)
+checkCertificateEligibility(userId, courseId) : Vérifie si 100% des leçons sont isCompleted: true.
+generateCertificateData(userId, courseId) : Prépare les données pour générer le PDF.
+
+C'est un excellent point de pivot. Puisque votre cible est jeune (Gen Z / Alpha) et que vous voulez créer une communauté forte pour vous démarquer des YouTubers classiques (qui offrent du contenu passif) et des LMS d'entreprise (qui sont ennuyeux), il faut miser sur l'Apprentissage Social et l'Hyper-Gamification.Voici 5 fonctionnalités "Tueuses" (Killer Features) pour rendre TankaAcademy addictif et communautaire, techniquement faisables avec votre stack (Next.js 16 + Cloudflare).1. Le système de "SQUADS" (Clans / Guildes)Les jeunes détestent apprendre seuls, mais adorent gagner en équipe (inspiré des jeux vidéo comme Clash of Clans).Le Concept : L'élève ne s'inscrit pas juste seul. Il peut rejoindre une "Squad" (ex: "Les Codeurs du Dimanche", "Team React Elite").La Mécanique : Les points d'expérience (XP) gagnés par l'élève en finissant des leçons contribuent au score total de la Squad.La Récompense : Chaque semaine, la meilleure Squad est affichée en haut de la page d'accueil ("Squad de la semaine").Tech : Une table Squad dans Prisma liée aux User. Une requête d'agrégation simple pour le leaderboard.2. Le "Duel Mode" (Bataille de Quiz)C'est ce qui manque à YouTube : la confrontation.Le Concept : Un bouton "Défier un ami" sur un chapitre.La Mécanique : L'élève A lance un défi. L'élève B reçoit une notif. Ils répondent au même quiz chronométré. Celui qui répond le plus vite et le plus juste vole des points à l'autre.Variante "Async" (Plus simple à coder) : Je fais le quiz, je fais un score de 900 points. J'envoie un lien à mon ami "Peux-tu me battre ?". S'il fait moins, je gagne un badge.Impact : Viralité instantanée. Ils vont partager vos liens TankaAcademy sur WhatsApp/Discord pour se défier.3. Le "Tanka Streak" (La Flamme à la Duolingo)La peur de perdre ce qu'on a construit est plus forte que l'envie de gagner (Loss Aversion).Le Concept : Un compteur de jours consécutifs d'apprentissage.La "Killer Feature" : Le "Streak Freeze". Si l'élève rate un jour, il perd sa flamme... SAUF s'il a assez de points pour acheter un "Gel" dans la boutique virtuelle.Pourquoi ça marche : Ça force l'élève à revenir tous les jours, même pour 5 minutes, juste pour ne pas briser sa chaîne.4. L'IA "Coach Personnel" (Ton Clone Virtuel)Puisque vous êtes le premier instructeur, vous ne pouvez pas répondre à 10 000 élèves.Le Concept : Un chatbot "TankaBot" disponible sous chaque vidéo.L'Innovation : Utilisez Cloudflare Workers AI (inclus dans votre plan) pour créer un RAG (Retrieval-Augmented Generation). L'IA ne répond qu'en se basant sur le texte de votre leçon.L'Expérience : L'élève demande : "Je n'ai pas compris la minute 4:30 sur Prisma". L'IA répond avec votre ton : "Pas de souci ! À ce moment-là, j'explique que...".Valeur : L'élève a l'impression d'avoir un prof particulier 24/7. YouTube ne fait pas ça.5. La "Proof of Work" (Portfolio Public)Les jeunes veulent montrer ce qu'ils savent faire pour trouver des stages/freelance.Le Concept : À la fin d'un cours pratique, l'élève doit uploader son projet (lien GitHub ou image).La Galerie : Une page publique "Hall of Fame" où les meilleurs projets des élèves sont exposés.Impact : TankaAcademy devient plus qu'une école, ça devient leur portfolio professionnel vérifié.Résumé de la Stratégie "YouTube vers Tanka"Voici comment lier votre chaîne YouTube à ces fonctionnalités pour aspirer l'audience :Sur YouTube (Le Teaser)Sur TankaAcademy (L'Expérience)"Je vous explique le concept en vidéo...""Viens faire le Duel Quiz contre moi sur la plateforme pour voir si tu as compris.""Laissez un commentaire...""Rejoins la Squad 'Team YouTube' sur la plateforme, on est en train de battre la 'Team Twitter'.""Abonnez-vous...""Maintiens ta Flamme (Streak) active pour débloquer le cours bonus secret."Recommandation immédiate :Commencez par le "Streak" (Série de jours) et le Leaderboard (Classement). C'est le meilleur ratio facilité de développement / impact sur la communauté.Voulez-vous que je génère le modèle Prisma pour le système de "Streak" et de "Squad" ?
+
+
+arsene@gmail.com ---prof azerty
+ber@gmail.com ----student azerty
+bibibi
