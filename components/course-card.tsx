@@ -10,7 +10,7 @@ import { formatPrice } from "@/lib/format";
 interface CourseCardProps {
   id: string;
   title: string;
-  imageUrl: string;
+  imageUrl: string | null;
   chaptersLength: number;
   price: number;
   progress: number | null;
@@ -31,13 +31,19 @@ export const CourseCard = ({
   return (
     <Link href={`/courses/${id}`}>
       <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
-        <div className="relative w-full aspect-video rounded-md overflow-hidden">
-          <Image
-            fill
-            className="object-cover"
-            alt={title}
-            src={imageUrl}
-          />
+        <div className="relative w-full aspect-video rounded-md overflow-hidden bg-slate-200">
+          {imageUrl ? (
+            <Image
+              fill
+              className="object-cover"
+              alt={title}
+              src={imageUrl}
+            />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full bg-slate-100">
+              <BookOpen className="h-12 w-12 text-slate-500" />
+            </div>
+          )}
         </div>
         <div className="flex flex-col pt-2">
           <div className="text-lg md:text-base font-medium group-hover:text-sky-700 transition line-clamp-2">

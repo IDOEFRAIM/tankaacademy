@@ -21,27 +21,12 @@ export const NavbarRoutes = ({ user }: NavbarRoutesProps) => {
 
   const isInstructorPage = pathname?.startsWith("/instructor");
   const isAdminPage = pathname?.startsWith("/admin");
-  const isPlayerPage = pathname?.includes("/courses");
+  const isPlayerPage = pathname?.includes("/courses") && !isInstructorPage;
 
   return (
     <div className="flex gap-x-2 ml-auto">
-      {/* 1. BOUTON MODE INSTRUCTEUR / QUITTER */}
-      {isInstructorPage || isAdminPage ? (
-        <div className="flex gap-x-2">
-          <Link href="/dashboard">
-            <Button size="sm" variant="ghost">
-              <Layout className="h-4 w-4 mr-2" />
-              Mon Apprentissage
-            </Button>
-          </Link>
-          <Link href="/">
-            <Button size="sm" variant="ghost">
-              <LogOut className="h-4 w-4 mr-2" />
-              Quitter le mode gestion
-            </Button>
-          </Link>
-        </div>
-      ) : isPlayerPage ? (
+      {/* 1. Mode Player (Course View) */}
+      {isPlayerPage ? (
         <Link href="/dashboard">
           <Button size="sm" variant="ghost">
             <LogOut className="h-4 w-4 mr-2" />
@@ -49,37 +34,43 @@ export const NavbarRoutes = ({ user }: NavbarRoutesProps) => {
           </Button>
         </Link>
       ) : (
-        <div className="flex gap-x-2">
-          {user && (
+        /* 2. Navigation Modes (Hub) */
+        <div className="flex gap-x-2 items-center">
+          
+          {/* Show 'Mode Étudiant' if on Admin or Instructor pages */}
+          {(isAdminPage || isInstructorPage) && (
             <Link href="/dashboard">
               <Button size="sm" variant="ghost">
-                Mon Apprentissage
+                <LogOut className="h-4 w-4 mr-2" />
+                Quitter le mode formateur
               </Button>
             </Link>
           )}
-          {user?.role === UserRole.INSTRUCTOR || user?.role === UserRole.ADMIN ? (
+
+          {/* Show 'Mode Formateur' if Admin or Instructor, AND NOT on Instructor Page */}
+          {user && (user.role === UserRole.INSTRUCTOR || user.role === UserRole.ADMIN) && !isInstructorPage && (
             <Link href="/instructor/courses">
-              <Button size="sm" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                Espace Formateur
+              <Button size="sm" variant="ghost">
+                Mode Formateur
               </Button>
             </Link>
-          ) : null}
-        </div>
-      )}
+          )}
 
-      {/* 2. ACCÈS ADMIN RAPIDE */}
-      {user?.role === UserRole.ADMIN && !isAdminPage && (
-        <Link href="/admin">
-          <Button size="sm" variant="ghost" className="text-rose-600">
-            <ShieldCheck className="h-4 w-4 mr-2" />
-            Admin
-          </Button>
-        </Link>
+          {/* Show 'Mode Admin' if Admin AND NOT on Admin Page */}
+          {user && user.role === UserRole.ADMIN && !isAdminPage && (
+            <Link href="/admin">
+              <Button size="sm" variant="ghost">
+                <ShieldCheck className="h-4 w-4 mr-2" />
+                Mode Admin
+              </Button>
+            </Link>
+          )}
+        </div>
       )}
 
       {/* 3. AUTHENTIFICATION */}
       {!user ? (
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 ml-4">
           <Link href="/auth/login">
             <Button size="sm" variant="ghost">Connexion</Button>
           </Link>
@@ -88,7 +79,7 @@ export const NavbarRoutes = ({ user }: NavbarRoutesProps) => {
           </Link>
         </div>
       ) : (
-        <div className="flex items-center gap-x-4">
+        <div className="flex items-center gap-x-4 ml-4">
            <UserMenu user={user} />
         </div>
       )}

@@ -20,7 +20,9 @@ export const NavbarClient = ({ user }: NavbarClientProps) => {
   // Hide navbar on course player pages
   // /courses is the list (keep navbar)
   // /courses/xyz is the player (hide navbar)
-  const isPlayerPage = pathname?.includes("/courses") && pathname?.split("/").length > 2;
+  // But ensure we exclude /instructor/courses which is NOT a player page
+  const isInstructorPage = pathname?.startsWith("/instructor");
+  const isPlayerPage = pathname?.includes("/courses") && pathname?.split("/").length > 2 && !isInstructorPage;
 
   if (isPlayerPage) {
     return null;

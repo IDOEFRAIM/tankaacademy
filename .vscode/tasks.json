@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "seed-python-course",
+			"type": "shell",
+			"command": "npx tsx scripts/seed-python-course.ts"
+		},
+		{
+			"label": "Seed Python Course",
+			"type": "shell",
+			"command": "npx tsx scripts/seed-python-course.ts"
+		},
+		{
+			"label": "Seed Python Course",
+			"type": "shell",
+			"command": "npx tsx scripts/seed-python-course.ts"
+		},
+		{
+			"label": "Seed Python Course",
+			"type": "shell",
+			"command": "npx tsx scripts/seed-python-course.ts"
+		},
+		{
+			"label": "Check Courses",
+			"type": "shell",
+			"command": "npx tsx scripts/check-courses.ts"
+		},
+		{
+			"label": "Re-Seed Python Course",
+			"type": "shell",
+			"command": "npx tsx scripts/seed-python-course.ts"
+		}
+	]
+}
