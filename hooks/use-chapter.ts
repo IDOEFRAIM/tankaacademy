@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Chapter } from "@/types";
-import { CourseService } from "@/services";
+import { ChaptersService } from "@/services";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
@@ -19,7 +19,7 @@ export const useChapter = (courseId: string) => {
   const addChapter = async (title: string) => {
     try {
       setIsUpdating(true);
-      await CourseService.addChapter(courseId, title);
+      await ChaptersService.createChapter(courseId, title);
       toast.success("Chapitre créé avec succès");
       router.refresh();
       return { success: true };
@@ -38,7 +38,7 @@ export const useChapter = (courseId: string) => {
   const reorderChapters = async (updatePayload: { id: string; position: number }[]) => {
     try {
       setIsUpdating(true);
-      await CourseService.reorderChapters(updatePayload);
+      await ChaptersService.reorderChapters(courseId, updatePayload);
       toast.success("Ordre des chapitres mis à jour");
       router.refresh();
       return { success: true };
@@ -57,7 +57,7 @@ export const useChapter = (courseId: string) => {
     try {
       setIsUpdating(true);
       // Appel au service (à implémenter dans CourseService)
-      // await CourseService.updateChapter(chapterId, values);
+      await ChaptersService.updateChapter(chapterId, courseId, values as any);
       toast.success("Chapitre mis à jour");
       router.refresh();
       return { success: true };

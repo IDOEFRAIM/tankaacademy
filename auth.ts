@@ -10,6 +10,7 @@ import { UserRole } from "@/types/auth";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: "jwt" },
+  secret: process.env.AUTH_SECRET, // Ajout explicite du secret
   pages: {
     signIn: "/auth/login",
     error: "/auth/login",

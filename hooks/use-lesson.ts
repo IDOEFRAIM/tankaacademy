@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Lesson } from "@/types";
-import { CourseService } from "@/services";
+import { LessonsService } from "@/services";
 import { useRouter } from "next/navigation";
 
 /**
@@ -19,7 +19,7 @@ export const useLesson = (courseId: string, chapterId: string) => {
   const createLesson = async (title: string) => {
     try {
       setIsUpdating(true);
-      await CourseService.addLesson(chapterId, title);
+      await LessonsService.createLesson(chapterId, title);
       
       // Indispensable avec Next.js App Router pour mettre à jour les données affichées
       router.refresh(); 
@@ -49,7 +49,7 @@ export const useLesson = (courseId: string, chapterId: string) => {
       } = values as any;
 
       // Note : Assure-toi que CourseService possède bien la méthode updateLesson
-      await CourseService.updateLesson(lessonId, pureData);
+      await LessonsService.updateLesson(lessonId, chapterId, pureData);
       
       router.refresh();
       return { success: true };
@@ -69,7 +69,7 @@ export const useLesson = (courseId: string, chapterId: string) => {
       setIsUpdating(true);
       
       // Note : Assure-toi que CourseService possède bien la méthode deleteLesson
-      await CourseService.deleteLesson(lessonId);
+      await LessonsService.deleteLesson(lessonId);
       
       router.refresh();
       return { success: true };

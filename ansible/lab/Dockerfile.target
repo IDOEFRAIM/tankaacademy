@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+# Install SSH and Python (Required specific for Ansible target)
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    python3 \
+    python3-pip \
+    sudo \
+    curl \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure SSH
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+# Permit root login for the lab
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Fix for some Ansible issues with sudo
+RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# Install Docker CLI (client only) so we can use the mounted socket
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+RUN apt-get update && apt-get install -y docker-ce-cli docker-compose-plugin
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]

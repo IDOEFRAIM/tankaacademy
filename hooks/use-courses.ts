@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Course } from "@/types";
-import { CourseService } from "@/services";
+import { CoursesService } from "@/services";
 
 interface UseCoursesProps {
   categoryId?: string;
@@ -38,11 +38,11 @@ export const useCourses = (filters: UseCoursesProps = {}) => {
       // Logique de récupération :
       if (filters.instructorId) {
         // Mode Dashboard Instructeur
-        data = await CourseService.getInstructorCourses(filters.instructorId);
+        data = await CoursesService.getInstructorCourses(filters.instructorId);
       } else {
         // Mode Catalogue Public
         // Note: Si getPublicCourses n'est pas encore prêt, on utilise une liste vide ou getInstructorCourses("")
-        data = await CourseService.getInstructorCourses(""); 
+        data = await CoursesService.getInstructorCourses(""); 
       }
 
       // LE CORRECTIF TYPE : On utilise "unknown" comme pivot pour 

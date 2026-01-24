@@ -90,7 +90,7 @@ export const ChaptersForm = ({
         </div>
       )}
       <div className="font-medium flex items-center justify-between">
-        Chapitres du cours
+        Parcours d'Apprentissage
         <Button onClick={toggleCreating} variant="ghost">
           {isCreating ? (
             <>Annuler</>

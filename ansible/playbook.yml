@@ -1,0 +1,95 @@
+---
+- name: Deploy Tanka Academy Application
+  hosts: webservers
+  become: true
+  vars:
+    project_root: /opt/tankaacademy
+
+  tasks:
+    - name: Ensure system is updated
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Install required system packages
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - git
+        state: present
+
+    # Setup Docker (Official Way)
+    - name: Create directory for Docker GPG key
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      when: install_docker | bool
+
+    - name: Download Docker's official GPG key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.ascs
+        mode: '0644'
+      when: install_docker | bool
+
+    - name: Add Docker repository to Apt sources
+      shell: |
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.ascs] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      args:
+        creates: /etc/apt/sources.list.d/docker.list
+      when: install_docker | bool
+
+    - name: Update apt cache after adding Docker repo
+      apt:
+        update_cache: yes
+      when: install_docker | bool
+
+    - name: Install Docker and Docker Compose
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+      when: install_docker | bool
+
+    - name: Create project directory
+      file:
+        path: "{{ project_root }}"
+        state: directory
+        mode: '0755'
+
+    # Méthode 1: Copie des fichiers locaux (Simple pour commencer)
+    # Note: Pour la production, préférez git clone ou une image Docker registry
+    - name: Copy project files to server
+      synchronize:
+        src: "{{ local_project_path | default('../') }}"
+        dest: "{{ project_root }}"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=node_modules"
+          - "--exclude=.next"
+          - "--exclude=ansible"
+          - "--exclude=dist"
+
+    - name: Create .env file from template
+      copy:
+        content: |
+          DATABASE_URL="postgresql://postgres:postgres@postgres:5432/tankaacademy"
+          NEXTAUTH_URL="http://{{ ansible_host }}:3000"
+          # Ajoutez vos autres variables ici
+        dest: "{{ project_root }}/.env"
+
+    - name: Build and Start containers
+      command: docker compose up -d --build --remove-orphans
+      args:
+        chdir: "{{ project_root }}"
+
+    - name: Prune unused Docker images
+      command: docker image prune -f

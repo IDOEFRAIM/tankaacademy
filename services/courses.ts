@@ -74,6 +74,24 @@ export const getCourses = async ({
 }
 
 export const CoursesService = {
+  async getInstructorCourses(instructorId: string) {
+    try {
+      const courses = await prisma.course.findMany({
+        where: {
+          instructorId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return courses;
+    } catch (error) {
+      console.error("[GET_INSTRUCTOR_COURSES]", error);
+      return [];
+    }
+  },
+
   async getPublishedCourses({
     title,
     categoryId,

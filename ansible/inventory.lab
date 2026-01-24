@@ -1,0 +1,10 @@
+[webservers]
+target ansible_user=root ansible_ssh_pass=root ansible_host=target
+
+[webservers:vars]
+# Désactiver la vérification de la clé hôte car c'est un env de test volatile
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+# Skip docker installation in lab because we mount the socket
+install_docker=false
+project_root=/opt/tankaacademy
+local_project_path=/opt/project-source/

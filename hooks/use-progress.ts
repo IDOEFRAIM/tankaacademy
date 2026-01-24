@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserService } from "@/services";
+import { ProgressService } from "@/services";
 import { useRouter } from "next/navigation";
 import { useConfetti } from "./use-confetti";
 import { useAuth } from "./use-auth"; // Import indispensable pour l'ID
@@ -29,10 +29,10 @@ export const useProgress = (courseId: string) => {
       const newStatus = !currentStatus;
       
       // CORRECTION : On passe userId comme 1er argument selon la signature du service
-      await UserService.updateProgress(userId, lessonId, newStatus);
+      await ProgressService.updateProgress(userId, lessonId, newStatus);
       
       // CORRECTION : On passe userId et courseId
-      const progress = await UserService.getCourseProgress(userId, courseId);
+      const progress = await ProgressService.getCourseProgress(userId, courseId);
       
       if (progress === 100 && newStatus) {
         confetti.onOpen();

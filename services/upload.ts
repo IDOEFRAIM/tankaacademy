@@ -16,11 +16,25 @@ export const UploadService = {
       }
       
       // Pour les documents (PDF, Exercices, etc.)
+      const lesson = await prisma.lesson.findUnique({
+        where: { id: lessonId },
+        select: { 
+          chapter: {
+            select: { courseId: true }
+          }
+        }
+      });
+
+      if (!lesson) throw new Error("Leçon introuvable pour lier le fichier");
+
       return await prisma.attachment.create({
         data: {
-          lessonId,
           url,
           name: url.split("/").pop() || "Ressource sans nom",
+          courseId: lesson.chapter.courseId,
+          lessons: {
+            connect: { id: lessonId }
+          }
         },
       });
     } catch (error) {
@@ -99,7 +113,11 @@ export const UploadService = {
    */
   async getLessonAttachments(lessonId: string) {
     return await prisma.attachment.findMany({
-      where: { lessonId },
+      where: { 
+        lessons: {
+          some: { id: lessonId }
+        }
+      },
       orderBy: { createdAt: "desc" }
     });
   }

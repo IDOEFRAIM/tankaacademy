@@ -42,12 +42,13 @@ export const getCourseVideos = async (courseId: string) => {
     }
 
     const videos = course.chapters.flatMap((chapter) => 
-      chapter.lessons.map((lesson) => ({
-        label: `Leçon : ${lesson.title}`,
-        url: lesson.videoUrl!,
-        id: lesson.id,
-      }))
-    );
+  chapter.lessons.map((lesson) => ({
+    // Ajout du nom du chapitre pour plus de clarté
+    label: `${chapter.title} > ${lesson.title}`, 
+    url: lesson.videoUrl!,
+    id: lesson.id,
+  }))
+);
 
     // Filter out duplicates by URL
     const uniqueVideos = Array.from(new Map(videos.map(item => [item.url, item])).values());

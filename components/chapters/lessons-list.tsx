@@ -65,7 +65,11 @@ export const LessonsList = ({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="lessons">
         {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
+          <div {...provided.droppableProps} ref={provided.innerRef} className="relative pb-4">
+            
+             {/* Ligne de progression (Timeline) pour les leçons */}
+            <div className="absolute left-[19px] top-6 bottom-6 w-[2px] bg-slate-200 z-0" />
+
             {lessons.map((lesson, index) => (
               <Draggable 
                 key={lesson.id} 
@@ -74,41 +78,64 @@ export const LessonsList = ({
               >
                 {(provided) => (
                   <div
-                    className={cn(
-                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm",
-                      lesson.status === "PUBLISHED" && "bg-sky-100 border-sky-200 text-sky-700"
-                    )}
+                    className="relative mb-6 pl-12 group"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                   >
-                    <div
+                     {/* Node / Drag Handle */}
+                     <div
                       className={cn(
-                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition",
-                        lesson.status === "PUBLISHED" && "border-r-sky-200 hover:bg-sky-200"
+                        "absolute left-0 top-3 h-10 w-10 flex items-center justify-center rounded-full border-2 bg-white z-10 transition-colors cursor-grab active:cursor-grabbing shadow-sm",
+                        lesson.status === "PUBLISHED" 
+                          ? "border-sky-600 text-sky-600 ring-4 ring-sky-50" 
+                          : "border-slate-300 text-slate-400 hover:border-slate-400 hover:text-slate-500"
                       )}
                       {...provided.dragHandleProps}
                     >
                       <Grip className="h-5 w-5" />
                     </div>
-                    {lesson.title}
-                    <div className="ml-auto pr-2 flex items-center gap-x-2">
-                      {lesson.isFree && (
-                        <Badge>
-                          Gratuit
-                        </Badge>
+
+                    {/* Lesson Card */}
+                    <div
+                      className={cn(
+                        "flex items-center justify-between rounded-xl border p-4 shadow-sm transition-all hover:shadow-md bg-white",
+                        lesson.status === "PUBLISHED" ? "border-sky-200 bg-sky-50/50" : "border-slate-200"
                       )}
-                      <Badge
-                        className={cn(
-                          "bg-slate-500",
-                          lesson.status === "PUBLISHED" && "bg-sky-700"
-                        )}
-                      >
-                        {lesson.status === "PUBLISHED" ? "Publié" : "Brouillon"}
-                      </Badge>
-                      <Pencil
-                        onClick={() => onEdit(lesson.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+                    >
+                      <div className="flex flex-col gap-y-1">
+                         <span className={cn(
+                          "font-semibold text-base",
+                           lesson.status === "PUBLISHED" ? "text-sky-900" : "text-slate-700"
+                        )}>
+                          {lesson.title}
+                        </span>
+                         <div className="flex items-center gap-x-2">
+                           <Badge
+                             variant={lesson.status === "PUBLISHED" ? "default" : "secondary"}
+                              className={cn(
+                              "text-xs font-normal",
+                              lesson.status === "PUBLISHED" && "bg-sky-600 hover:bg-sky-600/80"
+                            )}
+                           >
+                            {lesson.status === "PUBLISHED" ? "Publié" : "Brouillon"}
+                          </Badge>
+                          {lesson.isFree && (
+                            <Badge variant="outline" className="text-emerald-600 border-emerald-600">
+                              Gratuit
+                            </Badge>
+                          )}
+                         </div>
+                      </div>
+
+                      <div className="flex items-center gap-x-2">
+                        <div 
+                           onClick={() => onEdit(lesson.id)}
+                           className="p-2 rounded-full hover:bg-slate-200/50 cursor-pointer transition text-slate-500 hover:text-slate-800"
+                         >
+                            <Pencil className="h-4 w-4" />
+                         </div>
+                      </div>
+
                     </div>
                   </div>
                 )}

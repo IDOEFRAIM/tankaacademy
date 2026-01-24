@@ -65,7 +65,11 @@ export const ChaptersList = ({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="chapters">
         {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
+          <div {...provided.droppableProps} ref={provided.innerRef} className="relative pb-4">
+            
+            {/* Ligne de progression verticale (Timeline) */}
+            <div className="absolute left-[19px] top-6 bottom-6 w-[2px] bg-slate-200 z-0" />
+
             {chapters.map((chapter, index) => (
               <Draggable 
                 key={chapter.id} 
@@ -74,36 +78,57 @@ export const ChaptersList = ({
               >
                 {(provided) => (
                   <div
-                    className={cn(
-                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm",
-                      chapter.status === "PUBLISHED" && "bg-sky-100 border-sky-200 text-sky-700"
-                    )}
+                    className="relative mb-6 pl-12 group"
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                   >
+                    {/* Node / Drag Handle */}
                     <div
                       className={cn(
-                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition",
-                        chapter.status === "PUBLISHED" && "border-r-sky-200 hover:bg-sky-200"
+                        "absolute left-0 top-3 h-10 w-10 flex items-center justify-center rounded-full border-2 bg-white z-10 transition-colors cursor-grab active:cursor-grabbing shadow-sm",
+                        chapter.status === "PUBLISHED" 
+                          ? "border-sky-600 text-sky-600 ring-4 ring-sky-50" 
+                          : "border-slate-300 text-slate-400 hover:border-slate-400 hover:text-slate-500"
                       )}
                       {...provided.dragHandleProps}
                     >
                       <Grip className="h-5 w-5" />
                     </div>
-                    {chapter.title}
-                    <div className="ml-auto pr-2 flex items-center gap-x-2">
-                      <Badge
-                        className={cn(
-                          "bg-slate-500",
-                          chapter.status === "PUBLISHED" && "bg-sky-700"
-                        )}
-                      >
-                        {chapter.status === "PUBLISHED" ? "Publié" : "Brouillon"}
-                      </Badge>
-                      <Pencil
-                        onClick={() => onEdit(chapter.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+
+                    {/* Chapter Card */}
+                    <div className={cn(
+                      "flex items-center justify-between rounded-xl border p-4 shadow-sm transition-all hover:shadow-md bg-white",
+                      chapter.status === "PUBLISHED" ? "border-sky-200 bg-sky-50/50" : "border-slate-200"
+                    )}>
+                      <div className="flex flex-col gap-y-1">
+                        <span className={cn(
+                          "font-semibold text-base",
+                           chapter.status === "PUBLISHED" ? "text-sky-900" : "text-slate-700"
+                        )}>
+                          {chapter.title}
+                        </span>
+                        
+                        <div className="flex items-center gap-x-2">
+                           <Badge
+                            variant={chapter.status === "PUBLISHED" ? "default" : "secondary"}
+                            className={cn(
+                              "text-xs font-normal",
+                              chapter.status === "PUBLISHED" && "bg-sky-600 hover:bg-sky-600/80"
+                            )}
+                          >
+                            {chapter.status === "PUBLISHED" ? "Publié" : "Brouillon"}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-x-2">
+                         <div 
+                           onClick={() => onEdit(chapter.id)}
+                           className="p-2 rounded-full hover:bg-slate-200/50 cursor-pointer transition text-slate-500 hover:text-slate-800"
+                         >
+                            <Pencil className="h-4 w-4" />
+                         </div>
+                      </div>
                     </div>
                   </div>
                 )}

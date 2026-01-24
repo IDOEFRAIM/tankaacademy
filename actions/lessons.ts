@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { AuthService, LessonsService } from "@/services";
 import { UploadService } from "@/services/upload";
+import { deleteBunnyVideo } from "@/lib/bunny-util";
 import { CreateLessonSchema, UpdateLessonSchema } from "@/schemas/lessons";
 
 export const createLesson = async (
@@ -53,30 +54,25 @@ export const updateLesson = async (
 ) => {
   try {
     const user = await AuthService.requireInstructor();
-
-    // Check for existing video to delete if replaced
     const currentLesson = await LessonsService.getLessonById(lessonId, chapterId);
+
+    // Si on change de vidéo et que l'ancienne était sur Bunny
     if (
       values.videoUrl && 
       currentLesson?.videoUrl && 
-      values.videoUrl !== currentLesson.videoUrl
+      values.videoUrl !== currentLesson.videoUrl &&
+      currentLesson.videoUrl.includes("bunnycdn") // On vérifie que c'est bien du Bunny
     ) {
-      // Use try-catch specifically for file deletion to not block the update
-      try {
-        await UploadService.deletePhysicalFile(currentLesson.videoUrl);
-      } catch (e) {
-        console.error("Failed to delete old video file:", e);
-      }
+      // Optionnel : Supprimer de Bunny uniquement si c'est un upload unique
+      // await deleteBunnyVideo(currentLesson.videoUrl);
     }
 
     const lesson = await LessonsService.updateLesson(lessonId, chapterId, values);
-
     revalidatePath(`/instructor/courses/${courseId}/chapters/${chapterId}`);
 
     return { success: "Leçon mise à jour", lesson };
   } catch (error) {
-    console.error("[UPDATE_LESSON_ACTION]", error);
-    return { error: "Impossible de mettre à jour la leçon" };
+    return { error: "Impossible de mettre à jour" };
   }
 };
 
@@ -87,20 +83,18 @@ export const deleteLesson = async (
 ) => {
   try {
     const user = await AuthService.requireInstructor();
-
-    // Delete video file if exists
     const lesson = await LessonsService.getLessonById(lessonId, chapterId);
-    if (lesson?.videoUrl) {
-      await UploadService.deletePhysicalFile(lesson.videoUrl);
+
+    if (lesson?.videoUrl && lesson.videoUrl.includes("bunnycdn")) {
+       // On nettoie Bunny.net
+       await deleteBunnyVideo(lesson.videoUrl);
     }
 
     await LessonsService.deleteLesson(lessonId, chapterId);
-
     revalidatePath(`/instructor/courses/${courseId}/chapters/${chapterId}`);
 
     return { success: "Leçon supprimée" };
   } catch (error) {
-    console.error("[DELETE_LESSON_ACTION]", error);
     return { error: "Impossible de supprimer la leçon" };
   }
 };

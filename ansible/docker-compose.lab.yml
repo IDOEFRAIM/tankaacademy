@@ -1,0 +1,22 @@
+services:
+  # La machine qui "lance" les commandes Ansible (Simule votre PC ou un CI/CD)
+  controller:
+    build:
+      context: ./lab
+      dockerfile: Dockerfile.controller
+    volumes:
+      - ./:/ansible  # On monte le dossier ansible et tout le projet
+      - ../:/opt/project-source:ro # On monte le code source pour pouvoir le copier
+    command: tail -f /dev/null # Garde le conteneur actif
+
+  # Le "Serveur" cible (Simule le VPS Ubuntu)
+  target:
+    build:
+      context: ./lab
+      dockerfile: Dockerfile.target
+    ports:
+      - "2222:22" # Accès SSH depuis votre machine Windows si besoin (ssh root@localhost -p 2222)
+    # On monte le socket docker pour que "target" puisse lancer des conteneurs (Docker-in-Docker via socket)
+    # Cela permet à votre playbook de lancer "docker compose up" sur la cible
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

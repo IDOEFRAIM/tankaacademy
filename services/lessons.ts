@@ -50,53 +50,9 @@ export const LessonsService = {
           ...values,
         },
       });
-
       return lesson;
     } catch (error) {
       console.error("[UPDATE_LESSON_SERVICE]", error);
-      throw error;
-    }
-  },
-
-  async getLessonById(lessonId: string, chapterId: string) {
-    try {
-      const lesson = await prisma.lesson.findUnique({
-        where: {
-          id: lessonId,
-        },
-        include: {
-          quiz: {
-            include: {
-              questions: {
-                orderBy: {
-                  position: "asc",
-                },
-                include: {
-                  options: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      return lesson;
-    } catch (error) {
-      console.error("[GET_LESSON_BY_ID_SERVICE]", error);
-      return null;
-    }
-  },
-
-  async deleteLesson(lessonId: string, chapterId: string) {
-    try {
-      const lesson = await prisma.lesson.delete({
-        where: {
-          id: lessonId,
-        },
-      });
-      return lesson;
-    } catch (error) {
-      console.error("[DELETE_LESSON_SERVICE]", error);
       throw error;
     }
   },
@@ -132,6 +88,47 @@ export const LessonsService = {
       return lesson;
     } catch (error) {
       console.error("[UNPUBLISH_LESSON_SERVICE]", error);
+      throw error;
+    }
+  },
+
+  async getLessonById(lessonId: string, chapterId: string) {
+    try {
+      const lesson = await prisma.lesson.findUnique({
+        where: {
+          id: lessonId,
+          chapterId: chapterId,
+        },
+        include: {
+          quiz: {
+            include: {
+              questions: {
+                orderBy: {
+                  position: "asc",
+                },
+                include: {
+                  options: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return lesson;
+    } catch (error) {
+      console.error("[GET_LESSON_BY_ID_SERVICE]", error);
+      return null;
+    }
+  },
+
+  async deleteLesson(lessonId: string, chapterId?: string) {
+    try {
+      const lesson = await prisma.lesson.delete({
+        where: { id: lessonId },
+      });
+      return lesson;
+    } catch (error) {
+      console.error("[DELETE_LESSON_SERVICE]", error);
       throw error;
     }
   }

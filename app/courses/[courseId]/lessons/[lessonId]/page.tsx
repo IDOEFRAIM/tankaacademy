@@ -101,7 +101,7 @@ export default async function LessonIdPage({
   const nextLessonId = nextLesson?.id;
 
   const currentUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://tankaacademy.com"}/courses/${courseId}/lessons/${lessonId}`;
-
+//console.log('video_url',lesson.videoUrl)
   return (
     <div className="bg-slate-50 min-h-full">
       <div className="flex flex-col max-w-7xl mx-auto">

@@ -3,7 +3,7 @@ export * from "./auth";
 
 // 2. Exportation de l'extension de module pour NextAuth (Session, User, JWT)
 // Note : On l'exporte pour que TS traite les augmentations de modules globalement
-export * from "./next-auth";
+// export * from "./next-auth";
 
 // 3. Exportation de la structure pédagogique (Cours, Chapitres, Leçons)
 export * from "./courses";

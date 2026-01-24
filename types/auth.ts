@@ -5,6 +5,7 @@
  */
 
 import { DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 /**
  * 1. DÉFINITION DES RÔLES

@@ -1,0 +1,10 @@
+FROM python:3.11-alpine
+
+RUN apk add --no-cache \
+    ansible \
+    openssh-client \
+    sshpass \
+    git \
+    bash
+
+WORKDIR /ansible

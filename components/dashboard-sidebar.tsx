@@ -7,14 +7,14 @@ import { cn } from "@/lib/utils";
 
 const routes = [
   {
-    icon: Compass,
-    label: "Catalogue",
+    icon: Layout,
+    label: "Aperçu",
     href: "/",
   },
   {
-    icon: Layout,
-    label: "Mon Apprentissage",
-    href: "/dashboard",
+    icon: Compass,
+    label: "Catalogue",
+    href: "/search",
   },
   {
     icon: Settings,

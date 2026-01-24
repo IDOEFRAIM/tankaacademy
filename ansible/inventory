@@ -1,0 +1,4 @@
+[webservers]
+# Remplacez 1.2.3.4 par l'adresse IP de votre serveur
+# Vous pouvez obtenir un serveur gratuit/pas cher avec le GitHub Student Pack (DigitalOcean, Azure, etc.)
+1.2.3.4 ansible_user=root

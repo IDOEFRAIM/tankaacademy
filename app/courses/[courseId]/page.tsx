@@ -11,6 +11,7 @@ import Link from "next/link";
 import { CourseEnrollButton } from "@/components/course-enroll-button";
 import { ReviewList } from "@/components/review-list";
 import { getReviews } from "@/actions/reviews";
+import { CourseRoadmap } from "@/components/course-roadmap";
 
 export default async function CourseIdPage({
   params
@@ -83,6 +84,13 @@ export default async function CourseIdPage({
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="p-6">
+         <CourseRoadmap 
+            course={course}
+            isPurchased={hasAccess}
+         />
       </div>
 
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">

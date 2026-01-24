@@ -1,6 +1,20 @@
-version: '3.8'
-
 services:
+  app:
+    container_name: tanka_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/tankaacademy
+      NEXTAUTH_URL: http://localhost:3000
+      AUTH_SECRET: changeme_in_prod_random_string
+      AUTH_TRUST_HOST: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: always
+
   postgres:
     image: postgres:15-alpine
     container_name: tanka_postgres
@@ -9,7 +23,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: tankaacademy
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

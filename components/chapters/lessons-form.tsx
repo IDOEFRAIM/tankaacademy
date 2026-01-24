@@ -101,7 +101,7 @@ export const LessonsForm = ({
         </div>
       )}
       <div className="font-medium flex items-center justify-between">
-        Leçons du chapitre
+        Contenu du Chapitre
         <Button onClick={toggleCreating} variant="ghost">
           {isCreating ? (
             <>Annuler</>

@@ -108,8 +108,8 @@ const InstructorDashboardPage = async () => {
                       {course.title}
                     </div>
                     <div className="text-xs text-muted-foreground flex items-center gap-2">
-                       <Badge variant={course.isPublished ? "default" : "secondary"}>
-                          {course.isPublished ? "Publié" : "Brouillon"}
+                       <Badge variant={course.status === "PUBLISHED" ? "default" : "secondary"}>
+                          {course.status === "PUBLISHED" ? "Publié" : "Brouillon"}
                        </Badge>
                        <span>
                          {course.price ? formatPrice(course.price) : "Gratuit"}
