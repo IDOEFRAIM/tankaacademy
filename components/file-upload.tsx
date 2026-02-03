@@ -1,13 +1,12 @@
 "use client";
 
-import { UploadCloud, Loader2, FileIcon, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { UploadCloud, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { getUploadLimit } from "@/actions/get-system-settings";
+import { CldUploadButton } from "next-cloudinary";
 
 interface FileUploadProps {
-  // On accepte maintenant (url, file) pour être compatible avec tous tes formulaires
-  onChange: (url?: string, file?: File) => void;
+  onChange: (url?: string) => void;
   endpoint?: string;
   accept?: string;
 }
@@ -16,101 +15,110 @@ export const FileUpload = ({
   onChange,
   accept,
 }: FileUploadProps) => {
-  const [maxSize, setMaxSize] = useState<number>(2 * 1024 * 1024 * 1024); // Par défaut 2Go
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  // For very large videos, use server-side streaming upload
+  if (accept === "video/*") {
+    const [progress, setProgress] = useState(0);
+    const [uploading, setUploading] = useState(false);
+    const [eta, setEta] = useState<string>("");
+    const [xhrRef, setXhrRef] = useState<XMLHttpRequest | null>(null);
 
-  // Récupération de la limite configurée dans ton admin
-  useEffect(() => {
-    const fetchLimit = async () => {
-      try {
-        const limit = await getUploadLimit();
-        if (limit) setMaxSize(limit);
-      } catch (error) {
-        console.error("Erreur lors de la récupération de la limite:", error);
-      }
-    };
-    fetchLimit();
-  }, []);
+    const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setUploading(true);
+      setProgress(0);
+      setEta("");
+      const start = Date.now();
 
-  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-
-    const file = e.target.files[0];
-
-    // 1. Validation du type (si spécifié)
-    if (accept) {
-      const acceptedTypes = accept.split(',').map(type => type.trim());
-      const fileType = file.type;
-      const isValid = acceptedTypes.some(type => {
-        if (type.endsWith('/*')) {
-          return fileType.startsWith(type.split('/')[0]);
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/upload-video");
+      xhr.setRequestHeader("X-Filename", file.name);
+      xhr.setRequestHeader("Content-Type", "application/octet-stream");
+      xhr.upload.onprogress = (ev) => {
+        const total = file.size;
+        const loaded = ev.loaded;
+        if (total > 0) {
+          const pct = Math.round((loaded / total) * 100);
+          setProgress(Math.min(100, pct));
+          const elapsed = (Date.now() - start) / 1000; // seconds
+          const speed = loaded / elapsed; // bytes/sec
+          const remainingBytes = Math.max(0, total - loaded);
+          const remainingSec = speed > 0 ? remainingBytes / speed : 0;
+          const mins = Math.floor(remainingSec / 60);
+          const secs = Math.floor(remainingSec % 60);
+          setEta(`${mins}m ${secs}s`);
         }
-        return fileType === type;
-      });
+      };
+      setXhrRef(xhr);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          setUploading(false);
+          try {
+            const data = JSON.parse(xhr.responseText || "{}");
+            if (xhr.status >= 200 && xhr.status < 300 && data?.url) {
+              onChange(data.url);
+              toast.success("Upload terminé");
+            } else {
+              toast.error(data?.error || "Echec de l'upload");
+            }
+          } catch (err) {
+            toast.error("Réponse invalide du serveur");
+          }
+        }
+      };
+      xhr.send(file);
+    };
 
-      if (!isValid) {
-        toast.error(`Format non supporté. Attendu : ${accept}`);
-        return;
-      }
-    }
-
-    // 2. Validation de la taille
-    if (file.size > maxSize) {
-      const maxSizeGB = (maxSize / (1024 * 1024 * 1024)).toFixed(2);
-      toast.error(`Fichier trop lourd (Max: ${maxSizeGB} Go)`);
-      return;
-    }
-
-    // 3. Mise à jour UI et envoi au parent
-    setSelectedFileName(file.name);
-    
-    // On passe le fichier brut au composant parent (LessonVideoForm)
-    // C'est le parent qui gérera l'upload direct vers Bunny
-    onChange(undefined, file);
-  };
-
-  const resetSelection = () => {
-    setSelectedFileName(null);
-    onChange(undefined, undefined);
-  };
-
-  return (
-    <div className="w-full">
-      {!selectedFileName ? (
-        <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-slate-300 transition group">
-          <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            <UploadCloud className="w-10 h-10 mb-3 text-slate-400 group-hover:text-sky-600 transition" />
-            <p className="mb-2 text-sm text-slate-600">
-              <span className="font-semibold">Cliquez pour sélectionner</span> ou glissez un fichier
-            </p>
-            <p className="text-xs text-slate-500 italic">
-              {accept === "video/*" ? "Vidéo uniquement (MP4, WebM...)" : "Tous fichiers supportés"}
-            </p>
-            <p className="mt-1 text-[10px] text-slate-400">
-              Limite : {(maxSize / (1024 * 1024 * 1024)).toFixed(1)} Go
-            </p>
+    return (
+      <label className="flex flex-col items-center justify-center p-10 transition border-2 border-dashed rounded-md border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer w-full">
+        <UploadCloud className="w-10 h-10 mb-3 text-slate-400 group-hover:text-sky-600 transition" />
+        <div className="font-semibold text-slate-600">Choisir une vidéo (upload serveur)</div>
+        {uploading && (
+          <div className="mt-4 w-full max-w-sm">
+            <div className="h-2 bg-slate-200 rounded">
+              <div className="h-2 bg-sky-600 rounded" style={{ width: `${progress}%` }} />
+            </div>
+            <div className="text-xs text-slate-500 mt-1 flex justify-between">
+              <span>{progress}%</span>
+              <span>{eta && `ETA ${eta}`}</span>
+            </div>
+            <button
+              type="button"
+              className="mt-2 text-xs px-2 py-1 border rounded hover:bg-slate-100"
+              onClick={() => {
+                xhrRef?.abort();
+                setUploading(false);
+                setProgress(0);
+                setEta("");
+                toast.error("Upload annulé");
+              }}
+            >
+              Annuler
+            </button>
           </div>
-          <input 
-            type="file" 
-            className="hidden" 
-            accept={accept}
-            onChange={onSelectFile}
-          />
-        </label>
-      ) : (
-        <div className="flex items-center p-3 w-full bg-sky-50 border border-sky-200 rounded-md">
-          <FileIcon className="h-4 w-4 fill-sky-200 stroke-sky-700 mr-2" />
-          <span className="text-sm text-sky-700 truncate flex-1">
-            {selectedFileName}
-          </span>
-          <button 
-            onClick={resetSelection}
-            className="ml-auto hover:opacity-75 transition"
-          >
-            <X className="h-4 w-4 text-sky-700" />
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+        <input type="file" accept="video/*" className="hidden" onChange={handleFile} />
+      </label>
+    );
+  }
+
+  // Default: Cloudinary widget for images and small assets
+  return (
+    <CldUploadButton
+      onSuccess={(result: any) => {
+        onChange(result.info.secure_url);
+      }}
+      options={{
+        maxFiles: 1,
+        resourceType: "image",
+      }}
+      uploadPreset="tankacademy_signed"
+      signatureEndpoint="/api/sign-cloudinary-params"
+    >
+      <div className="flex flex-col items-center justify-center p-10 transition border-2 border-dashed rounded-md border-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+        <UploadCloud className="w-10 h-10 mb-3 text-slate-400 group-hover:text-sky-600 transition" />
+        <div className="font-semibold text-slate-600">Cliquez pour uploader (Cloudinary)</div>
+      </div>
+    </CldUploadButton>
   );
 };

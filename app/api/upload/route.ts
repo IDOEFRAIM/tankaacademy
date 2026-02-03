@@ -20,7 +20,8 @@ export async function POST(req: Request) {
     
     return NextResponse.json({ 
         videoId: createData.guid, 
-        libraryId: process.env.BUNNY_LIBRARY_ID 
+        libraryId: process.env.BUNNY_LIBRARY_ID,
+        apiKey: process.env.BUNNY_API_KEY 
     });
   } catch (error) {
     return NextResponse.json({ error: "Erreur init" }, { status: 500 });
