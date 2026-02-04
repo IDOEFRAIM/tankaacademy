@@ -60,6 +60,11 @@ export default auth((req) => {
 
 // 2. Configuration du Matcher
 // Filtre pour ne pas exécuter le middleware sur les fichiers statiques (images, etc.)
+// Exclure également la route d'upload vidéo pour éviter la limite de taille du body (Next.js middleware limitation)
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/((?!.+\\.[\\w]+$|_next|api/upload-video).*)", 
+    "/", 
+    "/(api(?!/upload-video)|trpc)(.*)"
+  ],
 };

@@ -12,7 +12,8 @@ import { useLessonCompleteModal } from "@/hooks/use-lesson-complete-modal";
 import { updateProgress } from "@/actions/progress";
 import { Button } from "@/components/ui/button";
 
-const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+
 
 interface VideoPlayerProps {
   videoUrl: string;

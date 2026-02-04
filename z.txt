@@ -1,0 +1,31 @@
+Apres cette lecon,vous serez en mesure de definir ce qu'est le cloud et ses principales charasteristiques
+
+Qu'est ce le cloud?
+
+Pour comprendre ce que c'est nous allons prendre quelques exemple.Imagine que tu es etudiant et tu 
+veux manger de l'attieke. Tu dois d abord savoir comment on cuisine ce repas.Nous allons appeller 
+ca:le knowledge ou l'aspect metier.Okay imagineons que tu sache le faire,il y a encore quelque chose d'autre,tu dois avoir le materiel 
+necessaire,c est a dire les condiments,les ustensiles:ce sont des ressources.Si tu coche ,toute ces cases ,tu peux manger ton attieke 
+comme tu veux,quand tu veux et surtoutu comme tu veux.Mais imagine, une personne qui ne sait soit pas prepaprer,soit n a pas le materiel
+ necessaire .Ou encore pire,un gars comme moi qui n a aucun des 3.Je sais pas preparer attieke,j ai pas le materiel necessairer...
+ Certains dirait que c est simple ,il suffit d apprendre ou de payer le materiel qu il faut.Mais ce qu il oublie, c est que j ai trop
+  de chose a gerer ,j ai pas le temps en fait...Et meme pour le materiel,je vais payer ca et je n utilise ca qu une fois par mois car 
+  c est pas tous les jours que je vais preparer de l attieke,je vais prendre du temps avant de renta cetta investissement.quand je vais
+   preparer, c est assez difficile de preparer juste pour une personne,c est mieux quand on le fait pour plusieur,tu vas utiliser du gaz
+    juste pour une petite assiete..Une solution serait de commander de l attieke et de me faire livrer...Comme ca,j ai mon attieke et je 
+    gagne en temps....
+    J ai ainsi paye pour avoir acces a un service.Je n ai pas du apprendre a cuisiner de l attieke,je n ai pas du payer
+     le materiel necessaire.J ai juste payer une somme raisonnable pour avoir access au produit final:l attieke...Mon histoire parait 
+     banal.Et pourtant! si vous avez compris ce que je viens de dire,c est que vous avez compris le cloud...il fonctionne de la meme 
+     maniere,sauf que ca a plus grande echelle.Rentrons un peu dans l aspect technique,le cloud,c est un model qui permet d avoir acces 
+     a des ressources depuis n importe ou.J ai marche(ia ajoute la vrai definition ici)...l attieke c est une ressource...Par exemple 
+     prenons un exemple reel(celui des developer)
+     
+      en prenant l attieke comme image...prenons un website developer,il veut deployer son
+      site.Normalement il doit configurer ses servers,gerer tout le traffic internet(network),tout ce qui est lie a la database,...Alors 
+      que lui il veut juste coder son site et le mettre en ligne ,comme nous qui voulons juste notre attieke,mais le dev est oblige de se
+       charger de partie supplementaire qui ne sont pas vraiment lie au code.Avant il devait payer et configurer son server ,juste pour
+        utiliser une partie des capacite,apres tout ,il paye 100000 pour utiliser 20000.Le reste ,c est comme s il le jettait par les
+         fenetre puisqu ils sont inutile....Amazon s est dit que c etait con ,ils ont ainsi cree ce qu on appelle maintenant le cloud....
+         Comme les restaurants,ils permettre a n importe qui d avoir la nourriture qu il veut sans devoir s occuper des details inutiles.
+         Je veux juste manger,le reste c est pas mon probleme,je veux juste coder,le reste c est pas mon probleme....
