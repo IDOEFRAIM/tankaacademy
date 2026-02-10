@@ -1,37 +1,28 @@
-
 import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
-import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 
-dotenv.config();
-
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 async function main() {
-  try {
-    await prisma.category.createMany({
-      data: [
-        { name: "Informatique" },
-        { name: "Musique" },
-        { name: "Fitness" },
-        { name: "Photographie" },
-        { name: "Comptabilité" },
-        { name: "Ingénierie" },
-        { name: "Cinéma" },
-      ],
-      skipDuplicates: true,
-    });
+  const hashedPassword = await bcrypt.hash("password", 10);
 
-    console.log("Success");
-  } catch (error) {
-    console.log("Error seeding the database categories", error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  await prisma.user.create({
+    data: {
+      name: "ido efraim",
+      email: "ido.efraim@example.com", // Remplace par l'email réel si besoin
+      password: hashedPassword,
+      role: "ADMIN",
+    },
+  });
+
+  console.log("Admin créé !");
 }
 
-main();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => {
+    prisma.$disconnect();
+  });

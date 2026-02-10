@@ -1,0 +1,15 @@
+Apres avoir compris ce qu'est le cloud il convient de se pencher sur ses caracteristiques.Au nombre des charasteristiques du cloud,nous pouvons citer:
+
+1)On demand service:
+ca veut juste dire qu'on a acces a des services sans une intervention humaine.Par exemple,quand tu pars a la banque ,tu peux retirer ton argent au guichet automatique,tu n a pas besoin d aller a la caisse,parler a un agent pour qu il te donne ton argent.Tu dis juste le montant que tu veux a la caisse et tu gagne rapidement ce que tu veux.C est ce qu on appelle ON DEMAND SERVICE.Prenons un exemple reel maintenantsi un developeur veut louer une base de donnee il n a pas besoin d appeler des gens,commander sa db et attendre...Il dit juste les capacite dont il a besoin,et le provider cloud lui fournit de facon instantane ,en moins de temps qu'il faut pour dire ouf...comme avec le guichet automatique,L acces au service est ainsi automatique ou autonome,instannee .En plus ,avec l'ON DEMAND SERVICE,on peut y avoir acces 24h/24 et 7J/7..Avec le cloud il n y a pas affaire de weekend,
+
+2:Broad Network access
+pour faire simple,on peut avoir access aux services du cloud depuis n importe ou et n'importe quand. C'est comme si ton livreur d'attieke pouvait venir te livre depuis n importe ou,que tu sois au japon,au etats unis ou au burkina faso,il va trouver les moyens d y arriver.Comment cela est il possible.En fait ,les providers cloud ont construits des data center un peu partout dans le monde ,ce qui permet d avoir une haute disponibilite...
+
+
+3) Ressources pooling
+Comme le nom l indique,generallement les gars ne parte pas loin pour chercher les noms,ressources pooling,c est une grande piscine ou on peut avoir access a des services.Prenons l exemple d un immeuble residentielle,on partage tous l electricite,l eau..Chacun vient puisser ce dont il a besoin
+
+4)Rapid Elasticity
+
+5)Measured service
