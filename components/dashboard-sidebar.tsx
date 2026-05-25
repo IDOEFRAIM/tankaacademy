@@ -1,6 +1,6 @@
 "use client";
 
-import { Compass, Layout, Settings } from "lucide-react";
+import { Compass, Layout, Settings,Hand } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,11 @@ const routes = [
     icon: Settings,
     label: "Paramètres",
     href: "/settings",
+  },
+    {
+    icon: Hand,
+    label: "Assistant",
+    href: "/assistant",
   },
 ];
 

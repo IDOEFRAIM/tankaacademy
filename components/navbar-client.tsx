@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 import { UserRole } from "@/types";
 import { NavbarRoutes } from "./navbar-route";
 import { MobileSidebar } from "./mobile-sidebar";
@@ -16,11 +17,8 @@ interface NavbarClientProps {
 
 export const NavbarClient = ({ user }: NavbarClientProps) => {
   const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Hide navbar on course player pages
-  // /courses is the list (keep navbar)
-  // /courses/xyz is the player (hide navbar)
-  // But ensure we exclude /instructor/courses which is NOT a player page
   const isInstructorPage = pathname?.startsWith("/instructor");
   const isPlayerPage = pathname?.includes("/courses") && pathname?.split("/").length > 2 && !isInstructorPage;
 
@@ -30,9 +28,18 @@ export const NavbarClient = ({ user }: NavbarClientProps) => {
 
   return (
     <>
-      <div className="h-[80px] fixed inset-y-0 w-full z-50 bg-white border-b shadow-sm">
+      <div className="h-20 fixed inset-y-0 w-full z-50 bg-white border-b shadow-sm">
         <div className="p-4 h-full flex items-center">
-          <MobileSidebar />
+          {/* Bouton hamburger mobile */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Ouvrir le menu"
+          >
+            <svg width="24" height="24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
+          </button>
+          {/* Sidebar mobile */}
+          <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} />
           <div className="flex items-center justify-between w-full ml-4">
             {/* LOGO */}
             <Link href="/" className="flex items-center gap-x-2">
@@ -40,13 +47,12 @@ export const NavbarClient = ({ user }: NavbarClientProps) => {
                 TANKA<span className="text-slate-900">ACADEMY</span>
               </span>
             </Link>
-
             {/* ROUTES & AUTH */}
             <NavbarRoutes user={user} />
           </div>
         </div>
       </div>
-      <div className="h-[80px]" />
+      <div className="h-20" />
     </>
   );
 };
