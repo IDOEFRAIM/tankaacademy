@@ -13,7 +13,8 @@
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@ai-sdk/react": "^3.0.193",
+    "@ai-sdk/groq": "^3.0.39",
+    "@ai-sdk/openai": "^3.0.66",
     "@auth/core": "^0.41.1",
     "@auth/prisma-adapter": "^2.11.1",
     "@hello-pangea/dnd": "^18.0.1",
@@ -35,7 +36,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
     "@types/canvas-confetti": "^1.9.0",
-    "ai": "^6.0.191",
+    "ai": "^6.0.193",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
