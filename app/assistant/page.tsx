@@ -27,14 +27,14 @@ export default function AssistantPage() {
           <div className="h-4 w-[1px] bg-slate-200 dark:bg-slate-800" />
           <div className="flex items-center gap-x-2">
             <Sparkles className="w-4 h-4 text-sky-600" />
-            <span className="font-medium text-sm text-muted-foreground">E-Learning Espace AI</span>
+            <span className="font-medium text-sm text-muted-foreground">TankaAI</span>
           </div>
         </div>
         
         <div className="flex items-center gap-x-2">
           <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
             <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Grok-Beta Connecté
+          ESPACE CONSEILLE
           </span>
         </div>
       </div>

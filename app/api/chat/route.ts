@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: `Tu es un tuteur pédagogique d'élite pour la plateforme TankAcademy. 
+          content: `Tu es un tuteur pédagogique d'élite pour la plateforme TankaAcademy. 
           Réponds avec clarté, bienveillance et rigueur. 
           Utilise le format Markdown pour structurer tes réponses.`
         },
