@@ -21,18 +21,10 @@ export const UserGreeting = ({ user }: UserGreetingProps) => {
 
         {/* Statut du niveau ou Lien d'action */}
         <div className="mt-2 text-sm text-slate-600">
-          {user?.level ? (
-            <p>
-              Tu es en <span className="font-semibold text-indigo-600">{user.level}</span>. Nous en tiendrons compte pour te recommander des cours.
+           <p>
+              Tu es en <span className="font-semibold text-indigo-600">SIXIEME</span>. Nous en tiendrons compte pour te recommander des cours.
             </p>
-          ) : (
-            <Link 
-              href="/settings" 
-              className="inline-block text-amber-600 hover:text-amber-700 font-medium underline underline-offset-4"
-            >
-              Choisis ton niveau pour obtenir des recommandations
-            </Link>
-          )}
+          
         </div>
 
         {/* Phrase d'accroche du bas */}
