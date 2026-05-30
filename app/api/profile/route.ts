@@ -13,17 +13,19 @@ export async function PATCH(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { name, password, newPassword } = values;
+    // Récupération de "level" envoyé par ton nouveau selecteur
+    const { name, password, newPassword, level } = values;
 
-    // Update name
-    if (name) {
-      await db.user.update({
-        where: { id: userId },
-        data: { name },
-      });
-    }
+    // Objet qui contiendra toutes les données à mettre à jour
+    const updateData: any = {};
 
-    // Update password if provided
+    // Préparation de la mise à jour du nom
+    if (name) updateData.name = name;
+
+    // Préparation de la mise à jour du niveau (6ème à Terminale)
+    if (level) updateData.level = level;
+
+    // Gestion de la modification du mot de passe si les champs sont fournis
     if (password && newPassword) {
       const user = await db.user.findUnique({
         where: { id: userId },
@@ -39,11 +41,16 @@ export async function PATCH(req: Request) {
         return new NextResponse("Incorrect password", { status: 400 });
       }
 
+      // Hashage du nouveau mot de passe et ajout aux données de mise à jour
       const hashedPassword = await bcrypt.hash(newPassword, 10);
+      updateData.password = hashedPassword;
+    }
 
+    // On exécute la mise à jour globale s'il y a des données à modifier
+    if (Object.keys(updateData).length > 0) {
       await db.user.update({
         where: { id: userId },
-        data: { password: hashedPassword },
+        data: updateData,
       });
     }
 

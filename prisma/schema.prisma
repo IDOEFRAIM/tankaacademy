@@ -11,6 +11,7 @@ model User {
   name          String?
   email         String         @unique
   emailVerified DateTime?      @map("email_verified")
+  level         StudyLevel?    @default(SIXIEME)
   image         String?
   role          UserRole       @default(STUDENT)
   createdAt     DateTime       @default(now()) @map("created_at")
@@ -32,6 +33,7 @@ model User {
 
   @@map("users")
 }
+
 
 model Account {
   id                String  @id @default(cuid())
@@ -290,4 +292,14 @@ enum UserRole {
 enum PublishStatus {
   DRAFT
   PUBLISHED
+}
+
+enum StudyLevel{
+  SIXIEME
+  CINQUIEME
+  QUATRIEME
+  TROISIEME
+  SECONDE
+  PREMIERE
+  TERMINALE
 }

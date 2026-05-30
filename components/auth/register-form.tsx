@@ -238,6 +238,40 @@ export const RegisterForm = () => {
                 </FormItem>
               )}
             />
+            {/* NIVEAU DE L'ÉLÈVE (6ÈME À TERMINALE) */}
+<FormField
+  control={form.control}
+  name="level" 
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel className="text-slate-700">Niveau de l'élève</FormLabel>
+      <Select 
+        disabled={isPending} 
+        onValueChange={field.onChange} 
+        defaultValue={field.value}
+      >
+        <FormControl>
+          <SelectTrigger className="bg-white border-slate-200">
+            <SelectValue placeholder="Choisir un niveau" />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {/* --- COLLÈGE --- */}
+            <SelectItem value="SIXIEME">6ème</SelectItem>
+            <SelectItem value="CINQUIEME">5ème</SelectItem>
+            <SelectItem value="QUATRIEME">4ème</SelectItem>
+            <SelectItem value="TROISIEME">3ème</SelectItem>
+            
+            {/* --- LYCÉE --- */}
+            <SelectItem value="SECONDE">Seconde</SelectItem>
+            <SelectItem value="PREMIERE">Première</SelectItem>
+            <SelectItem value="TERMINAL">Terminale</SelectItem>
+          </SelectContent>
+        </Select>
+        <FormMessage />
+      </FormItem>
+    )}
+  />
 
             {/* ALERTES ERREUR / SUCCÈS */}
             <div className="space-y-2">

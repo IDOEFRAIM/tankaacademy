@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { UserRole } from "@prisma/client";
+import { UserRole, StudyLevel } from "@prisma/client";
 
 /**
  * Schéma de Connexion (Login)
@@ -34,6 +34,9 @@ export const RegisterSchema = z
     }),
     role: z.nativeEnum(UserRole, {
       errorMap: () => ({ message: "Veuillez sélectionner un rôle (Client, Fournisseur, etc.)" }),
+    } as any),
+    level: z.nativeEnum(StudyLevel, {
+      errorMap: () => ({ message: "Veuillez sélectionner un niveau d'étude" }),
     } as any),
   })
   .refine((data) => data.password === data.confirmPassword, {
